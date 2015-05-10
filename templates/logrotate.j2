@@ -2,121 +2,101 @@
 
 "{{ item.log_file_path }}" {
 
-    # Frequency of rotating the log file.
-    {% if item.frequency and lower(item.frequency) in ["daily", "weekly", "monthly", "yearly"]  %}
-     {{ lower(item.frequency) }}
+    {% if item.frequency and item.frequency in ["daily", "weekly", "monthly", "yearly"]  %}
+    {{ item.frequency }}
     {% endif %}
-
-    # Log file size
-    {% if item.size %}
+   
+    {% if item.size is defined %}
     size {{ item.size }}
     {% endif %}
 
-    # Rotate count
-    {% if item.rotate_count %}
+    {% if item.rotate_count is defined -%}
     rotate {{ item.rotate_count | int }}
-    {% endif %}
+    {% endif -%}
 
-    # Start count
-    {% if item.start_count %}
+    {% if item.start_count is defined -%}
     start {{ item.start_count | int }}
-    {% endif %}
+    {% endif -%}
 
-    # Email id
-    {% if item.email %}
+    {% if item.email is defined -%}
     email {{ item.email }}
-    {% endif %}
+    {% endif -%}
 
-    # Missing OK
-    {% if item.missing_ok %}
+    {% if item.missing_ok is defined -%}
     missingok
-    {% else %}
+    {% else -%}
     nomissingok
-    {% endif %}
+    {% endif -%}
 
-    # Do not rotate file if it is empty
-    {% if item.not_if_empty %}
+    {% if item.not_if_empty is defined -%}
     notifempty
-    {% endif %}
-
-    # Log file compress options
-    {% if item.no_compress %}
+    {% endif -%}
+    
+    {% if item.no_compress is defined -%}
     nocompress
-    {% elif item.compress %}
+    {% elif item.compress is defined -%}
     compress
     
-    {% if item.compress.delay %}
+    {% if item.compress.delay is defined -%}
     delaycompress
-    {% endif %}
+    {% endif -%}
 
-    {% if item.compress.command %}
+    {% if item.compress.command is defined -%}
     compresscmd {{ item.compress.command }}
-    {% endif %}
+    {% endif -%}
 
-    {% if item.compress.options %}
+    {% if item.compress.options is defined -%}
     compressoptions {{ item.compress.options }}
-    {% endif %}
-    {% endif %}
+    {% endif -%}
+    {% endif -%}
 
-    # Rotated file extension
-    {% if item.rotated_file_extension %}
+    {% if item.rotated_file_extension is defined -%}
     extension {{ item.rotated_file_extension }}
-    {% endif %}
+    {% endif -%}
 
-    # Copy log file
-    {% if item.copy %}
+    {% if item.copy_log is defined -%}
     copy
-    {% endif %}
-
-    # Copy truncate
-    {% if item.copy_truncate %}
+    {% endif -%}
+    
+    {% if item.copy_truncate is defined -%}
     copytruncate
-    {% endif %}
+    {% endif -%}
 
-    # Create options
-    {% if item.create %}
+    {% if item.create is defined -%}
     create {{ item.create.mode }} {{ item.create.owner }} {{ item.create.group }}
-    {% endif %}
+    {% endif -%}
 
-    # Old directory
-    {% if item.old_directory %}
+    {% if item.old_directory is defined -%}
     olddir {{ item.old_directory }}
-    {% endif %}
+    {% endif -%}
 
-    # Script configuration
-    {% if item.scripts %}
-
-    # Shared script
-    {% if item.scripts.shared %}
+    {% if item.scripts is defined -%}
+    {% if item.scripts.shared is defined -%}
     sharedscripts
-    {% endif %}
+    {% endif -%}
 
-    # Pre rotate
-    {% if item.script.prerotate %}
+    {% if item.script.prerotate is defined -%}
     prerotate
                 {{ item.script.prerotate }}
     endscript
-    {% endif %}
+    {% endif -%}
 
-    # Post rotate script
-    {% if item.script.postrotate %}
+    {% if item.script.postrotate is defined -%}
     postrotate
                 {{ item.script.postrotate }}
     endscript
-    {% endif %}
-    {% endif %}
+    {% endif -%}
+    {% endif -%}
 
-    # First action
-    {% if item.first_action %}
+    {% if item.first_action is defined -%}
     firstaction
                 {{ item.first_action }}
     endscript
-    {% endif %}
+    {% endif -%}
 
-    # Last action
-    {% if item.last_action %}
+    {% if item.last_action is defined -%}
     lastaction
                 {{ item.end_action }}
     endscript
-    {% endif %}
+    {% endif -%}
 }
