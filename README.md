@@ -36,7 +36,7 @@ Define `logrotate_configs` in Ansible project. It is a list of configuration dic
 Example Playbook
 ----------------
 
-Setting up the logrotate configuration for apache2.
+Setting up the logrotate configuration for apache2 and tomcat.
     
     logrotate_configs:
         - name: apache2
@@ -72,6 +72,16 @@ Setting up the logrotate configuration for apache2.
           rotate_count: 7
           compress:
               delay: false
+
+For installing this role the following line should be in the requirements.yml
+
+    - src: https://github.com/rakeshcusat/logrotate
+      version: master
+      scm: git
+      name: logrotate
+You can use the following command to installed the role in `shared-roles` directory. You can modify this command based on your requirements.
+     `ansible-galaxy install -r requirements.yml -p shared-roles --force`
+
 License
 -------
 
