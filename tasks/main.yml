@@ -8,8 +8,8 @@
 
 - name: "Set up logrotate configuration"
   template:
-    src:logrotate.j2
-    dest: /etc/logrotate.d/{{ item.name }}
+    src: logrotate.j2
+    dest: "/etc/logrotate.d/{{ item.name }}"
   with_items: logrotate_configs
   when: logrotate_configs is defined
 
