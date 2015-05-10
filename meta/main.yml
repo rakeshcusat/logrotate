@@ -4,19 +4,19 @@ galaxy_info:
   description: Role to configure logrotate.
   company: Code4Reference.com
   license: license (MIT)
-  min_ansible_version: 1.5
-
-  - name: Ubuntu
-    versions:
-       - lucid
-       - maverick
-       - natty
-       - oneiric
-       - precise
-       - quantal
-       - raring
-       - saucy
-       - trusty
+  min_ansible_version: 1.8
+  platforms:
+    - name: Ubuntu
+      versions:
+         - lucid
+         - maverick
+         - natty
+         - oneiric
+         - precise
+         - quantal
+         - raring
+         - saucy
+         - trusty
 
   categories:
     - cloud
