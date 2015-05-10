@@ -7,20 +7,20 @@ galaxy_info:
   min_ansible_version: 1.5
 
   - name: Ubuntu
-     versions:
-     - lucid
-     - maverick
-     - natty
-     - oneiric
-     - precise
-     - quantal
-     - raring
-     - saucy
-     - trusty
+    versions:
+       - lucid
+       - maverick
+       - natty
+       - oneiric
+       - precise
+       - quantal
+       - raring
+       - saucy
+       - trusty
 
   categories:
-  - cloud
-  - system
-  - web
+    - cloud
+    - system
+    - web
 
 dependencies: []
