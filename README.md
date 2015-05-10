@@ -1,41 +1,83 @@
-Role Name
+Logrotate
 =========
 
-A brief description of the role goes here.
+It installs `Logrotate` and set the configuration.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
-
-Role Variables
---------------
-
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+This role should be installed as galaxy role in your Ansible project.
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+There is no dependencies on other role.
+
+Role Variables
+--------------
+Define `logrotate_configs` in Ansible project. It is a list of configuration dictionary for different log files.
+
+* name: Name of the logrotate file. Recommended to keep the name as the service name.
+* log_file_path: Log file path which should be rotated.
+* frequency: Frequency of logrorate. It should be either one of these `daily`, `weekly`, `monthly` or `yearly`.
+* size: Log files are rotated when they grow bigger then size. `K`, `M` and `G` can be used for Kilobytes, Megabytes, and Gigabytes e.g 100M.  
+* rotate_count: Log files will be rotated these many times before get deleted. It expect an integer value.
+* email: Email address where log will be sent.
+* missing_ok:  If the log file is missing, go on to the next one without issuing an error message.
+* compress: It is a dictionary configuration which contains three more parameters which are optional. `delay` to delay compression of the log file. `command` to compress the log file. By default, logrotate `gzip` to compress the file. `options` it is command options passed for the compress command. It is an optional argument.
+* rotated_file_extension: Rotated file extension. By default it is `.gz`.
+* copy: To copy the log file.
+* copy_truncate: Truncate the original log file in place after creating a copy.
+* create: After creating log file it sets the given mode, user and group. It is a dictionary configuration which contains three fields `mode`, `owner`, and `group`. Please check the example.
+* old_directory: Logs are moved to into this directory for rotation.
+* scripts: It is a dictionary configuration. It can contains three optional fields `shared`, `prerotate` and `postrotate`. If you want to shared the script with other rotated then set this field. `prerotate` accepts a block of script lines and executed before rotating the files. `postrotate` also accepts a block of script lines and execute them after rotating the files. Please check examples.
+* actions: It is a dictionary configuration. It can contains two optional fields `first` and `last`. `first` accepts a block of commands which will be executed before executing the prerotate scripts whereas `last` also accepts a block of command which will be executed after executing the post script.
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+Setting up the logrotate configuration for apache2.
     
     logrotate_configs:
-    - name: apache
-      frequency: daily
-      size: 20M
-    - name: tomcat
-      frequency: weekly
-      count:   
+        - name: apache2
+          log_file_path: "/var/log/apache2/*.log"
+          frequency: "weekly"
+          size: 1024M
+          rotate_count: 52
+          email: rakesh.kumar@code4reference.com
+          missing_ok: true
+          compress:
+              delay: true
+          not_if_empty: true
+          create:
+              mode: 640
+              owner: root
+              group: adm
+          scripts:
+              shared: true
+              prerotate: |
+                  if [ -d /etc/logrotate.d/httpd-prerotate];then \
+                      run-parts /etc/logrotate.d/httpd-prerotate; \
+                  fi; \
+              postrotate: |
+                /etc/init.d/apache2 reload > /dev/null
+          actions:
+              first: |
+                  echo "First action:  `date`"
+              last: |
+                  echo "End action: `date`"
+        - name: tomcat
+          log_file_path: "/your/applicaiton/log/file/path"
+          frequency: 'daily'
+          rotate_count: 7
+          compress:
+              delay: false
 License
 -------
 
-BSD
+MIT
 
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Rakesh Kumar(Code4Reference.com)

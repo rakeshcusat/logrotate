@@ -1,14 +1,13 @@
 # {{ ansible_managed }}
 
 "{{ item.log_file_path }}" {
-
-    {% if item.frequency and item.frequency in ["daily", "weekly", "monthly", "yearly"]  %}
+    {% if item.frequency is defined -%}
     {{ item.frequency }}
-    {% endif %}
+    {% endif -%}
    
-    {% if item.size is defined %}
+    {% if item.size is defined -%}
     size {{ item.size }}
-    {% endif %}
+    {% endif -%}
 
     {% if item.rotate_count is defined -%}
     rotate {{ item.rotate_count | int }}
@@ -22,7 +21,7 @@
     email {{ item.email }}
     {% endif -%}
 
-    {% if item.missing_ok is defined -%}
+    {% if item.missing_ok is defined and item.missing_ok -%}
     missingok
     {% else -%}
     nomissingok
@@ -36,15 +35,12 @@
     nocompress
     {% elif item.compress is defined -%}
     compress
-    
     {% if item.compress.delay is defined -%}
     delaycompress
     {% endif -%}
-
     {% if item.compress.command is defined -%}
     compresscmd {{ item.compress.command }}
     {% endif -%}
-
     {% if item.compress.options is defined -%}
     compressoptions {{ item.compress.options }}
     {% endif -%}
@@ -75,28 +71,29 @@
     sharedscripts
     {% endif -%}
 
-    {% if item.script.prerotate is defined -%}
+    {% if item.scripts.prerotate is defined -%}
     prerotate
-                {{ item.script.prerotate }}
+                {{ item.scripts.prerotate }}
     endscript
     {% endif -%}
 
-    {% if item.script.postrotate is defined -%}
+    {% if item.scripts.postrotate is defined -%}
     postrotate
-                {{ item.script.postrotate }}
+                {{ item.scripts.postrotate }}
     endscript
     {% endif -%}
     {% endif -%}
-
-    {% if item.first_action is defined -%}
+    {% if item.actions is defined -%}
+    {% if item.actions.first is defined -%}
     firstaction
-                {{ item.first_action }}
+                {{ item.actions.first }}
     endscript
     {% endif -%}
 
-    {% if item.last_action is defined -%}
+    {% if item.actions.last is defined -%}
     lastaction
-                {{ item.end_action }}
+                {{ item.actions.last }}
     endscript
+    {% endif -%}
     {% endif -%}
 }
