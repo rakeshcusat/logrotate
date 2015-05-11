@@ -1,7 +1,8 @@
 ---
-# Install logrotate first
-- apt:
-    name=logrotate
+# Install logrotate package.
+- name: Install logrotate
+  apt:
+    pkg=logrotate={{ logrotate_version }}
     state=present
 
 # Deploy the configuration file.
